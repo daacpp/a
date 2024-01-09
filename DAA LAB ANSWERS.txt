@@ -1,1194 +1,555 @@
-BINARY SEARCH
-
-// You are using GCC
-#include<iostream>
-using namespace std;
-int main()
-{
-    int n,f=0;
-    cin>>n;
-    int arr[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>arr[i];
-    }
-    int key,mid;
-    int first=0;
-    int last=n-1;
-    cin>>key;
-    while(first<=last)
-    {
-        mid=(first+last)/2;
-        if(arr[mid]<key)
-        {
-            first=mid+1;
-        }
-        else if(arr[mid]==key)
-        {
-            f=1;
-            cout<<mid;
-            break;
-        }
-        else
-        {
-            last=mid-1;
-        }
-    }
-    if(f==0)
-    {
-        cout<<"NO OCCURRENCES";
-    }
-}
-
-_________________________________________________________________________________
-
-LINEAR SEARCH
-
-// You are using GCC
-#include<iostream>
-using namespace std;
-int main()
-{
-    int n,f=0;
-    cin>>n;
-    int arr[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>arr[i];
-    }
-    int s;
-    cin>>s;
-    for(int i=0;i<n;i++)
-    {
-        if(arr[i]==s)
-        {
-            f++;
-            cout<<"Yes";
-            break;
-        }
-    }
-    if(f==0)
-    {
-        cout<<"No";
-    }
-}
-
-___________________________________________________________________________________
-
-BUBBLE SORT
-
-// You are using GCC
-#include<iostream>
-using namespace std;
-int main()
-{
-    int n;
-    cin>>n;
-    int arr[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>arr[i];
-    }
-    for(int i=0;i<n-1;i++)
-    {
-        for(int j=0;j<n-i-1;j++)
-        {
-            if(arr[j]>arr[j+1])
-            {
-                int temp=arr[j];
-                arr[j]=arr[j+1];
-                arr[j+1]=temp;
-            }
-        }
-    }
-    for(int i=0;i<n;i++)
-    {
-        cout<<arr[i]<<" ";
-    }
-}
-
-_____________________________________________________________________________________
-
-INSERTION SORT
-
-// You are using GCC
-#include<iostream>
-using namespace std;
-int main()
-{
-    int n;
-    cin>>n;
-    int arr[n];
-    for(int i=0;i<n;i++)
-        cin>>arr[i];
-    for(int i=1;i<n;i++)
-    {
-        int key=arr[i];
-        int j=i-1;
-        while(j>=0 && arr[j]>key)
-        {
-            arr[j+1]=arr[j];
-            j--;
-        }
-        arr[j+1]=key;
-    }
-    for(int i=0;i<n;i++)
-        cout<<arr[i]<<" ";
-}
-
-______________________________________________________________________________________
-
-SELECTION SORT
-
-// You are using GCC
-#include<iostream>
-using namespace std;
-struct age
-{
-    int date;
-    int month;
-    int year;
-}temp;
-int main()
-{
-    int n;
-    cin>>n;
-    struct age a[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>a[i].date>>a[i].month>>a[i].year;
-    }
-    for(int i=0;i<n;i++)
-    {
-        int min=i;
-        for(int j=i+1;j<n;j++)
-        {
-            if(a[j].year < a[min].year)
-            {
-                min=j;
-            }
-        }
-        temp=a[min];
-        a[min]=a[i];
-        a[i]=temp;
-    }
-    for(int i=0;i<n;i++)
-    {
-        cout<<a[i].date<<" "<<a[i].month<<" "<<a[i].year<<endl;
-    }
-}
-
-_________________________________________________________________________________________
-
-HEAP SORT
-
-// You are using GCC
-// You are using GCC
-#include<iostream>
-using namespace std;
-void heapify(int x[],int n,int i){
-    int lar=i;
-    int l=2*i+1;
-    int r=2*i+2;
-    if(l<n && x[l]>x[lar]){
-        lar=l;
-    }
-    if(r<n && x[r]>x[lar]){
-        lar=r;
-    }
-    if(lar!=i){
-        swap(x[i],x[lar]);
-        heapify(x,n,lar);
-    }
-}
-void heapsort(int x[],int n){
-    for(int i=n/2-1;i>=0;i--){
-        heapify(x,n,i);
-    }
-    for(int i=n-1;i>0;i--){
-        swap(x[0],x[i]);
-        heapify(x,i,0);
-    }
-}
-int main(){
-    int n;
-    cin>>n;
-    int x[n];
-    for(int i=0;i<n;i++){
-        cin>>x[i];
-    }
-    heapsort(x,n);
-    for(int i=0;i<n;i++){
-        cout<<x[i]<<" ";
-    }
-}
-
-______________________________________________________________________________
-
-QUICK SORT
-
-#include <iostream>
-using namespace std;
-int partition(int arr[], int start, int end)
-{
-	int pivot=arr[start];
-	int count=0;
-	for(int i=start+1;i<=end;i++) 
-	{
-		if (arr[i]<=pivot)
-			count++;
-	}
-	int pivotIndex=start+count;
-	swap(arr[pivotIndex],arr[start]);
-	int i=start;
-	int j=end;
-	while (i<pivotIndex && j>pivotIndex) 
-	{
-		while(arr[i]<=pivot) 
-		{
-			i++;
-		}
-		while(arr[j]>pivot) 
-		{
-			j--;
-		}
-		if(i<pivotIndex && j>pivotIndex) 
-		{
-			swap(arr[i++],arr[j--]);
-		}
-	}
-	return pivotIndex;
-}
-void quickSort(int arr[],int start,int end)
-{
-	if (start>=end)
-		return;
-	int p=partition(arr,start,end);
-	quickSort(arr,start,p-1);
-	quickSort(arr,p+1,end);
-}
-int main()
-{
-	int n;
-	cin>>n;
-	int arr[n];
-	for(int i=0;i<n;i++)
-	{
-	    cin>>arr[i];
-	}
-	quickSort(arr,0,n-1);
-	for(int i=0;i<n;i++) 
-	{
-		cout<<arr[i]<<" ";
-	}
-	return 0;
-}
-
-__________________________________________________________________________________________
-
-MERGE SORT
-
-#include<iostream>
-using namespace std;
-void swapping(int &a, int &b) {     //swap the content of a and b
-   int temp;
-   temp = a;
-   a = b;
-   b = temp;
-}
-void display(int *array, int size) {
-   for(int i = 0; i<size; i++)
-      cout << array[i] << " ";
-   cout << endl;
-}
-void merge(int *array, int l, int m, int r) {
-   int i, j, k, nl, nr;
-   //size of left and right sub-arrays
-   nl = m-l+1; nr = r-m;
-   int larr[nl], rarr[nr];
-   //fill left and right sub-arrays
-   for(i = 0; i<nl; i++)
-      larr[i] = array[l+i];
-   for(j = 0; j<nr; j++)
-      rarr[j] = array[m+1+j];
-   i = 0; j = 0; k = l;
-   //marge temp arrays to real array
-   while(i < nl && j<nr) {
-      if(larr[i] <= rarr[j]) {
-         array[k] = larr[i];
-         i++;
-      }else{
-         array[k] = rarr[j];
-         j++;
-      }
-      k++;
-   }
-   while(i<nl) {       //extra element in left array
-      array[k] = larr[i];
-      i++; k++;
-   }
-   while(j<nr) {     //extra element in right array
-      array[k] = rarr[j];
-      j++; k++;
-   }
-}
-void mergeSort(int *array, int l, int r) {
-   int m;
-   if(l < r) {
-      int m = l+(r-l)/2;
-      // Sort first and second arrays
-      mergeSort(array, l, m);
-      mergeSort(array, m+1, r);
-      merge(array, l, m, r);
-   }
-}
-int main() {
-   int n;
-   cin >> n;
-   int arr[n];     //create an array with given number of elements
-   for(int i = 0; i<n; i++) {
-      cin >> arr[i];
-   }
-   mergeSort(arr, 0, n-1);     //(n-1) for last index
-   display(arr, n);
-}
-
-____________________________________________________________________________________________
-
-ACTIVITY SELECTION PROBLEM
-
-#include<iostream>
-using namespace std;
-struct match
-{
-    char name[50];
-    int start;
-    int end;
-};
-int main()
-{
-    int n;
-    cin>>n;
-   struct match m[n];
-    struct match temp;
-    for(int i=0;i<n;i++)
-    {
-        cin>>m[i].name;
-        cin>>m[i].start;
-        cin>>m[i].end;
-    }
-    for(int i=0;i<n-1;i++)
-    {
-        for(int j=0;j<n-i-1;j++)
-        {
-            if(m[j].end>m[j+1].end)
-            {
-                temp=m[j];
-                m[j]=m[j+1];
-                m[j+1]=temp;
-            }
-        }
-    }
-    cout<<"Selected Activities are:"<<endl;
-    cout<<m[0].name<<" ";
-    int x=0;
-    
-    for(int i=1;i<n;i++)
-    {
-        if(m[i].start>=m[x].end)
-        {
-            cout<<m[i].name<<" ";
-            x=i;
-        }
-    }
-}
-
-____________________________________________________________________________________
-
-KNAPSACK PROBLEM
-
-#include<iostream>
-#include<iomanip>
-using namespace std;
-struct profit
-{
-    float wei;
-    float val;
-    float rat;
-};
-int main()
-{
-    int n;
-    cin>>n;
-    struct profit m[n];
-    struct profit temp;
-    for(int i=0;i<n;i++)
-    {
-        cin>>m[i].wei;
-        cin>>m[i].val;
-        m[i].rat=m[i].val/m[i].wei;
-    }
-    float cap;
-    cin>>cap;
-    for(int i=0;i<n-1;i++)
-    {
-        for(int j=0;j<n-i-1;j++)
-        {
-            if(m[j].rat<m[j+1].rat)
-            {
-                temp=m[j];
-                m[j]=m[j+1];
-                m[j+1]=temp;
-            }
-        }
-    }
-    float profit=0;
-    for(int i=0;i<n;i++)
-    {
-        if(m[i].wei<cap)
-        {
-            profit=profit+m[i].val;
-            cap=cap-m[i].wei;
-        }
-        else
-        {
-            profit=profit+((cap/m[i].wei)*m[i].val);
-            break;
-        }
-    }
-    cout<<"Maximum profit is:- ";
-    cout<<fixed<<setprecision(2)<<profit;
-}
-
-___________________________________________________________________________________
-
-NAIVE ALGORITHM
-
-// You are using GCC
-#include<iostream>
-using namespace std;
-void find(string a, string b)
-{
-    int m=a.length();
-    int n=b.length();
-    int f=0,j;
-    for(int i=0;i<m;i++)
-    {
-        for(j=0;j<n;j++)
-        {
-            if(a[i+j]!=b[j])
-            {
-                break;
-            }
-        }
-        if(j==n)
-        {
-            f=1;
-            cout<<"Found at "<<i;
-            cout<<endl;
-        }
-    }
-    if(f==0)
-    {
-        cout<<"Not Found";
-    }
-}
-int main()
-{
-    string a,b;
-    cin>>a>>b;
-    find(a,b);
-}
-
-_____________________________________________________________________________________
-
-KMP ALGORITHM
-
-#include <iostream>
-#include<cstring>
-using namespace std;
- 
-// Function to implement the KMP algorithm
-void KMP(char text[], char pattern[])
-{
-    int m = strlen(text);
-    int n = strlen(pattern);
-    int f=0;
- 
-     // next[i] stores the index of the next best partial match
-    int next[n + 1];
- 
-    for (int i = 0; i < n + 1; i++) {
-        next[i] = 0;
-    }
- 
-    for (int i = 1; i < n; i++)
-    {
-        int j = next[i];
- 
-        while (j > 0 && pattern[j] != pattern[i]) {
-            j = next[j];
-        }
- 
-        if (j > 0 || pattern[j] == pattern[i]) {
-            next[i + 1] = j + 1;
-        }
-    }
- 
-    for (int i = 0, j = 0; i < m; i++)
-    {
-        if (text[i] == pattern[j])
-        {
-            if (++j == n) {
-                cout << "Found at " << i - j + 1 << endl;
-                f=1;
-            }
-        }
-        else if (j > 0)
-        {
-            j = next[j];
-            i--;    // since `i` will be incremented in the next iteration
-        }
-    }
-    if(f==0)
-    cout<<"Not Found";
-}
- 
-// Program to implement the KMP algorithm in C++
-int main()
-{
-    char text[100] ;
-    char pattern[100] ;
-    cin>>text;
-    cin>>pattern;
-    KMP(text, pattern);
- 
-    return 0;
-}
-
-____________________________________________________________________________________________
-
-SUBSET SUM PROBLEM
-
-#include<iostream>
-using namespace std;
-static int subset_count=0;
-void subsetSum(int list[], int sum, int starting_index, int target_sum, int n)
-{
-    if(target_sum==sum)
-    {
-        subset_count++;
-        if(starting_index<n)
-        {
-            subsetSum(list, sum-list[starting_index-1], starting_index, target_sum, n);
-        }
-    }
-    else
-    {
-        for(int i=starting_index; i<n; i++)
-        {
-            subsetSum(list, sum+list[i], i+1, target_sum, n);
-        }
-    }
-}
-int main()
-{
-    int n;
-    cin>>n;
-    int list[n];
-    for(int i=0;i<n;i++)
-    {
-        cin>>list[i];
-    }
-    int s;
-    cin>>s;
-    subsetSum(list, 0, 0, s, n);
-    cout<<subset_count;
-}
-
-__________________________________________________________________________________________________
-
-RAT IN A MAZE
-
-#include<iostream>
-using namespace std;
-
-bool issafe(int** arr, int x, int y, int n){
-    if(x<n && y<n && arr[x][y]==1){
-        return true;
-    }
-    return false;
-}
-bool ratinMaze(int** arr, int x, int y, int n, int** solArr){
-    if(x==n-1 && y==n-1){
-        solArr[x][y]=1;
-        return true;
-    }
-    if(issafe(arr, x, y, n)){
-        solArr[x][y]=1;
-        if(ratinMaze(arr, x+1, y, n, solArr)){
-            return true;
-        }
-        if(ratinMaze(arr, x, y+1, n, solArr)){
-            return true;
-        }
-        solArr[x][y]=0;
-        return false;
-    }
-    return false;
-}
-int main(){
-    int n;
-    cin>>n;
-    int** arr=new int*[n];
-    for(int i=0; i<n; i++){
-        arr[i]=new int[n];
-    }
-    for(int i=0; i<n; i++){
-        for(int j=0; j<n; j++){
-            cin>>arr[i][j];
-        }
-    }
-    int** solArr=new int*[n];
-    for(int i=0; i<n; i++){
-        solArr[i] = new int[n];
-        for(int j=0; j<n; j++){
-            solArr[i][j]=0;
-        }
-    }
-    if(ratinMaze(arr, 0, 0, n, solArr)){
-        for(int i=0; i<n; i++){
-        for(int j=0; j<n; j++){
-            cout<<solArr[i][j]<<" ";
-        }cout<<endl;
-
-        }
-    }
-    else{
-        cout<<"Solution doesn't exist";
-    }
-    return 0;
-}
-
-________________________________________________________________________________________
-
-LONGEST COMMON SUBSEQUENCE
-
-#include<bits/stdc++.h>
-using namespace std;
-int lcs(string w1,string w2)
-{
-    int n=w1.length();
-    int m=w2.length();
-    int** dp=new int*[n+1];
-    for(int i=0;i<=n;i++)
-    {
-        dp[i]=new int[m+1];
-        for(int j=0;j<=m;j++)
-        {
-            dp[i][j]=0;
-        }
-    }
-    w1=" "+w1;
-    w2=" "+w2;
-    for(int i=1;i<=n;i++)
-    {
-        for(int j=1;j<=m;j++)
-        {
-            if(w1[i]!=w2[j])
-            {
-                dp[i][j]=max({dp[i-1][j],dp[i][j-1]});
-            }
-            else
-            {
-                dp[i][j]=1+dp[i-1][j-1];
-            }
-        }
-    }
-    return dp[n][m];
-}
-int main()
-{
-    string a,b;
-    cin>>a>>b;
-     cout<<lcs(a,b)<<"\n";
-}
-
-__________________________________________________________________________________________
-
-LEVENSHTEIN DISTANCE
-
-//levenshtien distance
-#include<bits/stdc++.h>
-using namespace std;
-int editlength(string w1,string w2){
-    int n=w1.length();
-    int m=w2.length();
-    int** dp=new int*[n+1];
-    for(int i=0;i<=n;i++){
-        dp[i]=new int[m+1];
-        for(int j=0;j<=m;j++){
-            dp[i][j]=0;//filling dp[0][0]=0
-            if(i==0){
-                dp[i][j]=j;//filling 1 to letter end
-            }
-            else if(j==0){
-                dp[i][j]=i;
-            }
-        }
-    }
-    w1=" "+w1;//to increase size
-    w2=" "+w2;
-    
-    for(int i=1;i<=n;i++){
-        for(int j=1;j<=m;j++){
-            if(w1[i]!=w2[j]){
-                dp[i][j]=1+min({dp[i-1][j-1],dp[i-1][j],dp[i][j-1]});
-            }
-            else{
-                dp[i][j]=dp[i-1][j-1];
-            }
-        }
-    }
-    return dp[n][m];
-}
-
-int main(){
-    string a,b;
-    cin>>a>>b;
-     cout<<editlength(a,b)<<"\n";
-}
-
-______________________________________________________________________________________________
-
-SEGMENT TREE RMQ
-
-#include <bits/stdc++.h>
-using namespace std;
-
-void buildSegmentTree(int arr[], int tree[], int start, int end, int treeNode) {
-    if (start == end) {
-        tree[treeNode] = arr[start];
-        return;
-    }
-
-    int mid = (start + end) / 2;
-    
-    buildSegmentTree(arr, tree, start, mid, 2 * treeNode+1);
-    buildSegmentTree(arr, tree, mid + 1, end, 2 * treeNode + 2);
-
-    tree[treeNode] = min(tree[2 * treeNode+1], tree[2 * treeNode + 2]);
-}
-
-int query(int tree[], int start, int end, int treeNode, int left, int right) {
-    if (left > end || right < start) {
-        return INT_MAX;
-    }
-    if (left <= start && right >= end) {
-        return tree[treeNode]; 
-    }
-
-    int mid = (start + end) / 2;
-    
-    int leftmin = query(tree, start, mid, 2 * treeNode+1, left, right);
-    int rightmin= query(tree, mid + 1, end, 2 * treeNode + 2, left, right);
-
-    return min(leftmin,rightmin);
-}
-
-
-int main() {
-    int n; 
-    cin >> n;
-    int arr[n]; 
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-    }
-    
-    int left, right; 
-    cin >> left >> right;
-    int height = ceil(log2(n));
-    int treeSize = 2 * pow(2, height) - 1;
-
-    int tree[treeSize]; 
-
-    buildSegmentTree(arr, tree, 0, n - 1, 0);   
-
-    cout << "Minimum of values in range [" << left << ", " << right << "] is = " <<  query(tree, 0, n - 1, 0, left, right)<< endl;
-    return 0;
-}
-
-__________________________________________________________________________________________________________________
-
-RMQ USING SPARSE TABLE
-
-#include <iostream>
-#include <cmath>
-using namespace std;
-int cons(int arr[],int a,int b,int *st,int ind){
-    if(a == b){
-        st[ind] = arr[a];
-        return arr[a];
-    }
-    int mid = (a + b) / 2;
-    st[ind] = min(cons(arr,a,mid,st,2*ind + 1),cons(arr,mid+1,b,st,2*ind+2));
-    return st[ind];
-}
-int* create(int arr[],int a,int b){
-    int n = b - a + 1;
-    int x = ceil(log2(n));
-    int size = 2 * pow(2,x) - 1;
-    int *st = new int[size];
-    cons(arr,a,b,st,0);
-    return st;
-}
-int main(){
-    int n,a,b;
-    cin>>n;
-    int arr[n];
-    for(int i=0;i<n;i++)
-        cin>>arr[i];
-    cin>>a>>b;
-    if(a>b or a>=n or b>=n){
-        cout<<0;
-        exit(0);
-    }
-    int *st = create(arr,a,b);
-    cout<<st[0];
-}
-
-_________________________________________________________________________________________________
-
-FLOYD WARSHALL ALGORITHM
-
-#include<bits/stdc++.h>
-using namespace std;
-int INF= 99999;
-int V;
-void FW(int **graph)
-{
-	int dist[V][V],i, j, k;
-	for(i = 0; i < V; i++) 
-	{		
-			for(j = 0; j < V; j++) 
-			{
-				dist[i][j]=graph[i][j];
-			}
-	}
-	
-	for (k = 0; k < V; k++) 
-	{
-		for (i = 0; i < V; i++) 
-		{		
-			for (j = 0; j < V; j++) 
-			{
-				if (dist[i][j] > dist[i][k] + dist[k][j])
-					dist[i][j] = dist[i][k] + dist[k][j];
-			}
-		}
-	}
-	for (i = 0; i < V; i++) 
-	{
-			for (j = 0; j < V; j++) 
-			{
-				if (dist[i][j] ==INF )
-					cout << "INF"
-						<< " ";
-				else
-					cout << dist[i][j] << " ";
-			}
-			cout << endl;
-	}
-}
-int main()
-{
-	int E,source,destn,value;
-	cin>>V>>E;
-	int **graph=new int*[V]; 
-	for(int i=0; i<V; i++)
-	{
-        graph[i]=new int[V];
-    }
-	for(int i = 0 ; i < V ; i++)
-	{ 
-		for(int j = 0 ; j < V ; j++)
-		{ 
-			if(i==j) 
-			{
-				graph[i][j] = 0 ; 
-			
-			}		
-			else 
-			{
-				graph[i][j] = INF ;	
-			}
-				
-		}
-	}
-	for(int i=0;i<E;i++)
-	{
-		cin>>source;
-		cin>>destn;
-		cin>>value;
-		graph[source][destn]=value;
-		graph[destn][source]=value;		
-	}	
-	for(int i = 0 ; i < V ; i++)
-	{ 
-		for(int j = 0 ; j < V ; j++)
-		{ 
-			if(graph[i][j]==INF) 
-			{
-				cout<<"INF  ";	 
-			}		
-			else 
-			{
-				cout<<graph[i][j]<<" ";		
-			}		
-		}
-		cout<<endl;
-	}
-	FW(graph);
-	return 0;
-}
-
-______________________________________________________________________________________________
-
-PRIMS ALGORITHM
-
-#include<iostream>
-using namespace std;
-#define INFINITY 9999
-int main()
-{
-	int x,y,u,v,n,i,j,num_edge=1;
-	int visited[10]={0},min;
-	cin>>n;
-	int adj[n][n];
-	for(i=0;i<n;i++)
-	{
-		for(j=0;j<n;j++)
-		{
-			cin>>adj[i][j];
-			if(adj[i][j]==0)
-				adj[i][j]=INFINITY;
-		}
-	}
-	visited[0]=1;
-	while(num_edge<n)
-	{
-		for(i=0,min=INFINITY;i<n;i++)
-		{
-			for(j=0;j<n;j++)
-			{
-				if(adj[i][j]<min)
-				{
-					if(visited[i]!=0)
-					{
-						min=adj[i][j];
-						x=u=i;
-						y=v=j;
-					}
-				}
-			}
-		}
-		if(visited[u]==0 || visited[v]==0)
-		{
-			cout<<x<<"  "<<y<<"  "<<min<<endl;
-			visited[y]=1;
-		}
-		adj[x][y]=adj[y][x]=9999;
-		num_edge++;
-	}
-return 0;
-}
-
-____________________________________________________________________________________________________
-
-DIJKSTRAS ALGORITHM
-
-Djkstra's Algorithm
-// You are using GCC
-#include <bits/stdc++.h>
-using namespace std;
-#define V 5 // Number of vertices
-
-int minDistance(int dist[], bool sptSet[]) {
-    int min = INT_MAX, min_index;
-
-    for (int v = 0; v < V; v++) {
-        if (!sptSet[v] && dist[v] <= min) {
-            min = dist[v];
-            min_index = v;
-        }
-    }
-
-    return min_index;
-}
-
-void printSolution(int dist[]) {
-    cout << "Vertex\tDistance from Source\n";
-    for (int i = 0; i < V; i++) {
-        cout << i << "\t" << dist[i] << std::endl;
-    }
-}
-
-void dijkstra(int graph[V][V], int src) {
-    int dist[V];
-    bool sptSet[V];
-
-    for (int i = 0; i < V; i++) {
-        dist[i] = INT_MAX;
-        sptSet[i] = false;
-    }
-
-    dist[src] = 0;
-
-    for (int count = 0; count < V - 1; count++) {
-        int u = minDistance(dist, sptSet);
-        sptSet[u] = true;
-
-        for (int v = 0; v < V; v++) {
-            if (!sptSet[v] && graph[u][v] && dist[u] != INT_MAX &&
-                dist[u] + graph[u][v] < dist[v]) {
-                dist[v] = dist[u] + graph[u][v];
-            }
-        }
-    }
-
-    printSolution(dist);
-}
-
-int main() {
-    int graph[V][V];
-    for(int i=0;i<V;i++){
-        for(int j=0;j<V;j++){
-            cin>>graph[i][j];
-        }
-    }
-    int s;
-    cin>>s;
-    dijkstra(graph, s);
-
-    return 0;
-}
-
-______________________________________________________________________________________________________
-
-KRUSKALS ALGORITHM
-
-#include <iostream>
-#include <algorithm>
-#include <vector>
-
-using namespace std;
-
-class Edge {
-public:
-    int src, dest, weight;
-
-    bool operator<(const Edge &other) const {
-        return weight < other.weight;
-    }
-};
-
-class Subset {
-public:
-    int parent, rank;
-};
-
-class Graph {
-    int V, E;
-    vector<Edge> edges;
-
-public:
-    Graph(int v, int e) {
-        V = v;
-        E = e;
-    }
-
-    void addEdge(int src, int dest, int weight) {
-        Edge edge;
-        edge.src = src;
-        edge.dest = dest;
-        edge.weight = weight;
-        edges.push_back(edge);
-    }
-
-    int find(Subset subsets[], int i) {
-        if (subsets[i].parent != i)
-            subsets[i].parent = find(subsets, subsets[i].parent);
-
-        return subsets[i].parent;
-    }
-
-    void Union(Subset subsets[], int x, int y) {
-        int xroot = find(subsets, x);
-        int yroot = find(subsets, y);
-
-        if (subsets[xroot].rank < subsets[yroot].rank)
-            subsets[xroot].parent = yroot;
-        else if (subsets[xroot].rank > subsets[yroot].rank)
-            subsets[yroot].parent = xroot;
-        else {
-            subsets[yroot].parent = xroot;
-            subsets[xroot].rank++;
-        }
-    }
-
-    void KruskalMST() {
-        vector<Edge> result;
-        int e = 0;
-        int i = 0;
-
-        sort(edges.begin(), edges.end());
-
-        Subset subsets[V];
-
-        for (i = 0; i < V; ++i) {
-            subsets[i].parent = i;
-            subsets[i].rank = 0;
-        }
-
-        i = 0;
-
-        while (e < V - 1) {
-            Edge next_edge = edges[i++];
-
-            int x = find(subsets, next_edge.src);
-            int y = find(subsets, next_edge.dest);
-
-            if (x != y) {
-                result.push_back(next_edge);
-                Union(subsets, x, y);
-                e++;
-            }
-        }
-
-        cout << "Following are the edges in the constructed MST" << endl;
-        int minimumCost = 0;
-        for (Edge edge : result) {
-            cout << edge.src << " -- " << edge.dest << " == " << edge.weight << endl;
-            minimumCost += edge.weight;
-        }
-        cout << "Minimum Cost Spanning Tree: " << minimumCost << endl;
-    }
-};
-
-int main() {
-    int V, E;
-    cin >> V >> E;
-    Graph graph(V, E);
-
-    for (int i = 0; i < E; i++) {
-        int src, dest, weight;
-        cin >> src >> dest >> weight;
-        graph.addEdge(src, dest, weight);
-    }
-
-    graph.KruskalMST();
-
-    return 0;
-}
-
-_______________________________________________________________________________________________________________
+EXPERIMENT-2:
+1)AIM:
+To Print hello world using command prompt.
+PROGRAM :
+Print(“Hello World”)
+2)AIM:
+To write a code to print hello world in notepad and run in command prompt PROGRAM:
+Print(“Hello World”)
+3)AIM :
+To write a python code to get student name and register number from user and print it PROGRAM:
+A=input(“Enter the student Name ”)
+B=int(input(“Enter the Register number ”))
+print(“Student Name is ” ,A)
+print(“Register number ”,B)
+4)AIM:
+To perform basic math operators in python
+PROGRAM:
+a=5
+b=10
+print(a+b)
+print(a-b)
+print(b/a)
+print(a*b)
+print(a**2)
+print(b%a)
+print(b//a)
+5)AIM:
+To get Two numbers from the user and perform the basic operations of python PROGRAM:
+a=int(input(“Enter the first number”))
+b=int(input(“Enter the second number”))
+print(“The sum of numbers”,a+b)
+print(“The subtraction of numbers”,a-b)
+print(“The division of two numbers”,b/a)
+print(“The multiplication of two numbers”, a*b)
+print(“A to the power of 2 is”a**2)
+print(b%a)
+print(b//a)
+6)AIM:
+To find the data type of above data using python function type
+PROGRAM:
+
+ type("hari") type(123) type(15.8) type("1212") type(True) type(False) type("True") 7)AIM:
+To assign values to the variables and check if its valid or not PROGRAM:
+var@=1
+345good=1
+c_v_t=1
+rat_RAT=1
+T123=334
+R>>T=1
+r%rt=2
+race=2
+race_count3 race_count_COUNT_START_%=2 ##race=23
+print=34 PRINT=21 false=32 FALSE=214 True=32 def=213 DEF=32 Def=21 none=213 9.AIM:
+To Use different String operations in python PROGRAM:
+a=“kane”
+b=”williamson”
+c=a+b print(c) print(c*3)
+EXPERIMENT-3:
+1)AIM:
+Display “Hai I am James” as “My Name Is James” using output formatting of a print () function CODE:
+
+ name=input("Hai I am :")
+print("My Name is ", name)
+2)AIM:
+Print first 10 natural numbers using while loop CODE:
+i=1
+while(i<=10):
+print(i,end=" ")
+i+=1
+3)AIM:
+Print the following pattern
+1
+12
+123
+1234
+12345
+CODE:
+for i in range(1,6):
+for j in range(1,i+1):
+print(j,end=" ")
+print()
+4)AIM:
+Accept numbers form the user and calculate the sum of all numbers between 1 and given number. For example user given 10 so the output should be 55
+CODE:
+n=int(input("Enter a number :"))
+sum=0
+for i in range(1,n+1):
+sum=sum+i
+print("The sum is:",sum)
+5)AIM:
+Print multiPlication table of given number
+CODE:
+n=int(input("Enter a number :"))
+for i in range (1,11):
+print("{0} x {1} = {2}".format(i,n,n*i))
+6)AIM:
+Given a number count the total number of digits in number . For example , the number is 75969, so the
+output should be 5
+CODE:
+n=int(input("Enter a number :"))
+digits=0
+
+ while(n>0):
+digits+=1
+n//=10
+print("The no. of digits is: ",digits) 7)AIM:
+Display -50 to -20 using for loop CODE :
+for i in range (-50,-19): print(i,end=" ")
+8)AIM:
+Perform add,sum,multiplication and division of two numbers using functions. CODE:
+a=int(input("Enter a number 1:"))
+b=int(input("Enter a number 2:"))
+def add(x,y):
+print("The sum of two numbers is :",x+y)
+def sub(x,y):
+print("The difference of two numbers is :",x-y)
+def product(x,y):
+print("The product of two numbers is :", x*y)
+def div(x,y):
+print("The division of two numbers is :",x//y)
+add(a,b)
+sub(a,b)
+product(a,b)
+div(a,b)
+9)AIM:
+Calculate the Fibonacci series of given number
+CODE:
+n=int(input("Enter a number :"))
+def fibo(i):
+if (i<=1):
+return(1)
+else:
+return(fibo(i-1)+fibo(i-2))
+for i in range(0,n+1):
+print(fibo(i),end=" ")
+10)AIM:
+Write a program to find the biggest of three numbers using functions. CODE:
+a=int(input("Enter a number 1 :"))
+b=int(input("Enter a number 2 :"))
+c=int(input("Enter a number 3 :"))
+
+ print("The biggest number is: ") if((a>b)&(a>c)):
+print(a)
+elif(b>c):
+print(b)
+else:
+print(c)
+11)AIM:
+Find if the entered number is Armstrong number or not CODE:
+print("TO CHECK THE NUMBER IS EITHER AMSTRONG NUMBER OR NOT ") n=int(input("Enter a number : "))
+num,x,cube=n,0,0
+while(n>0):
+x=n%10
+cube=cube+(x*x*x)
+n=n//10
+if(num == cube):
+print("Given number is an amstrong number") else:
+print("Given number is not an amstrong number")
+EXPERIMENT-4:
+3)AIM:
+Accept list of 5 float numbers as a input from user using append() function PROGRAM:
+A=[]
+for i in range (0,5):
+i=float(input("Enter a float number : "))
+A.append(i)
+print(A)
+4)AIM:
+Given a list of numbers, return True if first and last number of a list is same PROGRAM:
+A=[10,20,40,50,20,10]
+print(A)
+a=A[0]==A[-1]
+print(a)
+5)AIM:
+Given a list of numbers, Iterate it and print only those numbers which are divisible of 5 PROGRAM:
+A=[10,15,12,13,20,35,100,45,67,89,34]
+print("A=",A)
+
+ print("Numbers divisible by 5 are :") for i in A:
+if (i%5==0):
+print(i,end=" ")
+6)AIM:
+Reverse the following list using for loop
+list1 = [10, 20, 30, 40, 50]
+PROGRAM:
+A=[1,2,3,4,5,6]
+print(A)
+for i in reversed(A):
+print (i,end=" ")
+7)AIM:
+create the following list and remove few elements from the list List = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+PROGRAM:
+LIST=[1,2,3,4,5,6,7,8,9,10,1,12]
+print(LIST)
+LIST.remove(5)
+LIST.remove(1)
+print("list after removing elements")
+print(LIST)
+EXPERIMENT-5:
+1) AIM:
+To check if a string is palindrome or not. PROGRAM:
+text=input("Enter a word:") reverse=text[::-1]
+if(text==reverse):
+print("{0} is palindrome".format(text)) else:
+print("{0} is not palindrome".format(text)) 2)AIM:
+Reverse words in a given String PROGRAM:
+text=input("Enter a word:") length=len(text)
+reverse=""
+for i in range(-1,-(length+1),-1): reverse=reverse+text[i]
+print(reverse)
+3)AIM:
+
+ Ways to remove i’th character from string
+PROGRAM:
+text=input("Enter a word:")
+x=int(input("Enter the position of the character to be deleted:")) l=len(text)
+for i in range(l): if(i==x):
+continue print(text[i],end="") 4)AIM:
+Check if a Substring is Present in a Given String PROGRAM:
+text=input("Enter a text:")
+search=input("enter the search text:")
+if(search in text ):
+print("{0} is in {1}".format(search,text))
+else:
+print("{0} is not in {1}".format(search,text))
+5)AIM:
+To accept the strings which contains all vowels PROGRAM:
+text=input("Enter a text:")
+v="aeiou"
+count=0
+for i in range(5):
+if(v[i] in text ):
+continue
+else:
+count+=1
+print("{0} is missing in {1}". format(v[i],text))
+if(count==0):
+print(text," contain all vowels in it.")
+6.AIM:
+Replace duplicate Occurrence in String
+PROGRAM:
+text=input("Enter a text:")
+l=len(text)
+new=text[0]
+for i in range(0,l-1):
+if(text[i] != text[i+1]):
+new+=text[i+1]
+print("TEXT WITHOUT REPEATING DUPLICATE\n\t",new) 7)AIM:
+
+ Check if a string contains any special character PROGRAM:
+text=input("Enter a text:")
+test=text.isalnum()
+if(test==True):
+print("It doesn\'t contain any special character")
+else:
+print("It contain some special character")
+8)AIM:
+Count the Number of matching characters in a pair of string PROGRAM:
+txt1=input("Enter a text 1 :")
+txt2=input("Enter a text 2 :")
+count=0
+for i in txt1:
+for j in txt2:
+if(i==j):
+count+=1
+print("These words have {0} matchimg characters".format(count))
+EXPERIMENT-6:
+1)AIM:
+To count the number of even and odd numbers from a series of numbers
+PROGRAM:
+num=int(input("Enter number of inputs to get:" ))
+lst=[]
+odd,eve=0,0
+for i in range(1,num+1):
+a=int(input("enter the input {}: ".format(i)))
+lst.append(a)
+if(a%2==0):
+eve=eve+1
+else:
+odd=odd+1
+print(lst)
+print("Number of even inputs: ",eve)
+print("Number of odd inputs: ",odd)
+2)AIM:
+Python program that prints each item and its corresponding type from the following list. lis=[1,2.5,"Sri","Krishna",True,False,1589,1625.0]
+PROGRAM:
+lis=[1,2.5,"Sri","Krishna",True,False,1589,1625.0]
+for i in lis:
+
+ print("{}\t{}". format(i,type(i)))
+3)AIM:
+Program that prints all the numbers from 0 to 6 except 3 and 6. (use continue stmnt) PROGRAM:
+for i in range(0,7):
+if(i==3 or i==6 ):
+continue
+print(i,end=" ")
+4)AIM:
+Print the first 50 Fibonacci series.
+PROGRAM:
+x=0
+y=1
+for i in range(50):
+print(x,end=" , ")
+temp=x
+x=y
+y=x+temp
+EXPERIMENT-7:
+1)AIM:
+Factorial of a given number.
+PROGRAM:
+num=int(input("Enter a number to find the factorial: ")) def facto(n):
+fact=1
+for i in range (1,n+1):
+fact=fact*i
+print("Fctorial of entered number is : ", fact) facto(num)
+2)AIM:
+Sum of numbers
+PROGRAM:
+def sumofnum(n):
+sum=0
+for i in range(0,n+1):
+sum=sum+i
+print("Sum of given numbers is ",sum) num=int(input("Enter a number to sum : ")) sumofnum(num)
+3)AIM:
+Fibonacci series
+PROGRAM:
+
+ def fibo(i):
+if(i<=1):
+return(1)
+else:
+return (fibo(i-1)+fibo(i-2)) n=int(input("Enter a number : ")) for i in range(0,n+1): print(fibo(i),end=" ")
+4)AIM:
+Find the GCD of two numbers
+PROGRAM:
+def GCD(a,b):
+if(a<b):
+small=a
+else:
+small=b
+i=1
+while(i<=small):
+if(a%i==0 and b%i==0):
+Gcd=i
+i=i+1
+print("The GCD of two numbers is : ",Gcd) n1=int(input("Enter number 1 : " ))
+n2=int(input("Enter number 2 : " ))
+GCD(n1,n2)
+5)AIM:
+Find the power of numbers using recursion PROGRAM:
+def power(n,m):
+ans=n
+for i in range(1,m):
+ans=ans*n
+print("The power of the numbers is : " ,ans) a=int(input("enter the number :" ))
+b=int(input("enter the power : " ))
+power(a,b)
+6)AIM:
+find the average of unknown number of inputs in python PROGRAM:
+inp=[]
+print("press 0 to exit")
+while True:
+x=int(input("Enter input:"))
+
+ if x==0:
+break inp.append(x)
+print(inp)
+s=sum(inp)
+t=len(inp)
+avg=s/t
+print("The average of the numbers is :",avg)
+EXPERIMENT-8:
+ALL PROGRAMS IN EXPERIMENT-7 +
+7)AIM:
+Find the volume, surface area and space diagonals of a cuboid PROGRAM:
+l=int(input("Enter the lenght of cuboid: "))
+b=int(input("Enter the breadth of cuboid: "))
+h=int(input("Enter the height of cuboid: "))
+SA = 2 * (l*b + b*h + h*l)
+V= (l*b*h)
+SD= ( l**2 + b**2 + h**2)**0.5
+print("SURFACE AREA : ",SA)
+print("VOLUME :",V)
+print("SPACE DIAGONAL :",SD)
+EXPERIMENT-9:
+1)AIM:
+Get input from user and create a list PROGRAM:
+n=int(input("Enter the no. of inputs:")) lst=[]
+for i in range(n):
+a=int(input("Enter the inputs:"))
+lst.append(a)
+print(lst)
+2)AIM:
+Get input from user and calculate the length of the list PROGRAM:
+n=int(input("Enter the no. of inputs:")) lst=[]
+for i in range(n):
+a=int(input("Enter the inputs:"))
+lst.append(a) print(lst)
+
+ print("The length of the list : ",len(lst))
+3)AIM:
+Get input from user and calculate the sum and average of the list PROGRAM:
+n=int(input("Enter the no. of inputs:"))
+lst=[]
+for i in range(n):
+a=int(input("Enter the inputs:"))
+lst.append(a)
+print(lst)
+print("The average of the list:",sum(lst)/n)
+4)AIM:
+Using append() method add values to the list PROGRAM:
+lst=[1,3,5,76,8,1.3]
+print(lst)
+lst.append(4)
+lst.append(0.4)
+print(lst)
+5)AIM:
+Using insert() method add values to the list PROGRAM:
+lst=[1,3,5,76,8,1.3]
+print(lst)
+lst.insert(4,78)
+lst.insert(2,8)
+print(lst)
+6)AIM:
+Using extend() method add values to the list PROGRAM:
+lst=[1,3,5,76,8,1.3]
+print(lst)
+lst.extend([1,6,99,0.3])
+print(lst)
+7)AIM:
+Using remove() method remove values from the list PROGRAM:
+lst=[1,3,5,76,8,1.3,8]
+print(lst)
+lst.remove(5)
+lst.remove(8)
+print(lst)
+8)AIM:
+
+ Using pop() method remove values from the list PROGRAM:
+lst=[1,3,5,76,8,1.3,8]
+print(lst)
+lst.pop()
+lst.pop(2)
+print(lst)
+9)AIM:
+Perform positive and negative slicing in a list PROGRAM:
+lst=[1,2,3,4,5,6,7,8,9] print(lst)
+lst1=lst[::-1] lst2=lst[2:8] print(lst1)
+print(lst2)
+10)AIM:
+Program for matrix input from user (2*2 or 3*3 matrix) PROGRAM:
+R = int(input("Enter the number of rows:"))
+C = int(input("Enter the number of columns:"))
+matrix = []
+print("Enter the entries row wise:")
+for i in range(R):
+a =[]
+for j in range(C):
+a.append(int(input()))
+matrix.append(a)
+for i in range(R):
+for j in range(C):
+print(matrix[i][j], end = " ") print()
+11)AIM:
+Program to add two matrices using nested loops PROGRAM:
+X = [[1,2,3],[4 ,5,6],[7 ,8,9]]
+Y = [[2,1,0],[1,3,2],[4,6,3]]
+result = [[0,0,0],[0,0,0],[0,0,0]]
+for i in range(len(X)):
+for j in range(len(X[0])):
+result[i][j] = X[i][j] + Y[i][j]
+for r in result:
+print(r)
+
+ EXPERIMENT-10:
+1)AIM:
+To Create a Dictionary
+PROGRAM:
+D={1:'one', 2:'two', 3:'three', 4:'four', 5:'five', 6:'six'}
+print(D)
+2)AIM:
+Adding elements to a Dictionary using update() method PROGRAM:
+D={1:'one', 2:'two', 3:'three', 4:'four', 5:'five', 6:'six'}
+print(D)
+D1={7:'seven'}
+D.update(D1)
+print(D)
+3)AIM:
+Accessing elements from a Dictionary
+PROGRAM:
+D={1:'one', 2:'two', 3:'three', 4:'four', 5:'five', 6:'six'}
+print(D)
+print(D[1])
+print(D[4])
+4)AIM:
+Removing Elements from Dictionary
+(a) Using del keyword
+(b) Using pop() method
+(c) Using clear() method
+PROGRAM:
+D={1:'one', 2:'two', 3:'three', 4:'four', 5:'five', 6:'six'}
+print(D)
+del D[2]
+print(D)
+D.pop(5)
+print(D)
+D.clear()
+5)AIM:
+Create a txt file called demo.txt which contains the following data: 150.00 50.00
+270.00 20.00
+PROGRAM:
+f=open("demo.txt",'w')
+f.write("150.00 50.00 \n 270.00 20.00")
+f1=open("demo.txt",'r')
+6)AIM:
+
+ Copy the contents of the above file(demo.txt) to demo1.txt PROGRAM:
+f=open("demo.txt",'w')
+f.write("150.00 50.00 \n 270.00 20.00") f1=open("demo.txt",'r')
+7)AIM:
+Update the below contents in demo1.txt
+450.00 25.00
+280.00 20.00
+PROGRAM:
+f1=open("demo1.txt",'w')
+f1.write("450.00 25.00 \n 280.00 20.00")
+f1.close
+8)AIM:
+Count the number of words and the number of lines in both the files PROGRAM:
+d=open("demo.txt",'r')
+d1=open("demo1.txt",'r')
+x=d.read()
+y=d1.read()
+len,len1,w,w1=0,0,0,0
+for i in x.split('\n'):
+len+=1
+for i in y.split('\n'):
+len1+=1
+print("No.of lines in demo is {} \n No.of lines in demo1 is {}".format(len,len1)) for i in x.split():
+w+=1
+for i in y.split():
+w1+=1
+print("No.of words in demo is {} \n No.of words in demo1 is {}".format(w,w1)) d.close()
+d1.close()
+9)AIM:
+Merge both the les as demo2.txtd
+PROGRAM:
+d=open("demo.txt",'r')
+d1=open("demo1.txt",'r')
+d2=open("demo2.txt",'w')
+x=d.read()
+y=d1.read()
+d2.write(x+'\n'+y)
+d.close()
+
+ d1.close()
