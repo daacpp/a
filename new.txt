@@ -1,193 +1,278 @@
-import numpy as np
-import matplotlib.pyplot as plt
-data = np.array([
-    [1, 1],
-    [1.5, 2],
-    [3, 4],
-    [5, 7],
-    [3.5, 5],
-    [4.5, 5],
-    [3.5, 4]
+import nltk
+from nltk.tree import Tree
+
+# Build the parse tree manually based on the grammar and sentence structure
+parse_tree = Tree('S', [
+    Tree('NP', [
+        Tree('Det', ['the']),
+        Tree('Nom', [
+            Tree('Adj', ['angry']),
+            Tree('Nom', [
+                Tree('N', ['bear'])
+            ])
+        ])
+    ]),
+    Tree('VP', [
+        Tree('V', ['chased']),
+        Tree('NP', [
+            Tree('Det', ['the']),
+            Tree('Nom', [
+                Tree('Adj', ['frightened']),
+                Tree('Nom', [
+                    Tree('Adj', ['little']),
+                    Tree('Nom', [
+                        Tree('N', ['squirrel'])
+                    ])
+                ])
+            ])
+        ])
+    ])
 ])
-centroids = np.array([data[0], data[3]])
 
-def euclidean_distance(a, b):
-    return np.sqrt(np.sum((a - b) ** 2))
+# Pretty-print the parse tree
+parse_tree.pretty_print()
 
-def kmeans(data, centroids, max_iters=100):
-    for _ in range(max_iters):
-        clusters = [[] for _ in centroids]
-        for point in data:
-            distances = [euclidean_distance(point, centroid) for centroid in centroids]
-            clusters[np.argmin(distances)].append(point)
-        new_centroids = np.array([np.mean(cluster, axis=0) if cluster else centroid 
-                                  for cluster, centroid in zip(clusters, centroids)])
-        if np.all(centroids == new_centroids):
-            break
-        centroids = new_centroids
-    return clusters, centroids
-clusters, centroids = kmeans(data, centroids)
-colors = ['r', 'b']
-plt.figure(figsize=(8, 6))
-for i, cluster in enumerate(clusters):
-    cluster = np.array(cluster)
-    plt.scatter(cluster[:, 0], cluster[:, 1], color=colors[i])
-    plt.scatter(*centroids[i], color=colors[i], marker='x', s=100, linewidths=3)   
-plt.xlabel('var1')
-plt.ylabel('var2')
-plt.title('K-means Clustering with Circular Boundaries')
-plt.show()
+-----------------------------------------------------------------------------
+def min_edit_distance(str1, str2):
+    m = len(str1)
+    n = len(str2)
 
------------------------------------------------------------------
+    # Create a 2D DP table
+    dp = [[0 for _ in range(n + 1)] for _ in range(m + 1)]
 
-dataset = [
-    {"Sky": "Sunny", "AirTemp": "Warm", "Humidity": "Normal", "Wind": "Strong", "Water": "Warm", "Forecast": "Same", "EnjoySport": "Yes"},
-    {"Sky": "Sunny", "AirTemp": "Warm", "Humidity": "High", "Wind": "Strong", "Water": "Warm", "Forecast": "Same", "EnjoySport": "Yes"},
-    {"Sky": "Rainy", "AirTemp": "Cold", "Humidity": "High", "Wind": "Strong", "Water": "Warm", "Forecast": "Change", "EnjoySport": "No"},
-    {"Sky": "Sunny", "AirTemp": "Warm", "Humidity": "High", "Wind": "Strong", "Water": "Cool", "Forecast": "Change", "EnjoySport": "Yes"},
+    # Fill the base cases
+    for i in range(m + 1):
+        dp[i][0] = i  # delete all characters from str1
+    for j in range(n + 1):
+        dp[0][j] = j  # insert all characters to str1
+
+    # Fill the rest of the table
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if str1[i - 1] == str2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]  # no operation needed
+            else:
+                dp[i][j] = 1 + min(
+                    dp[i - 1][j],    # delete
+                    dp[i][j - 1],    # insert
+                    dp[i - 1][j - 1] # replace
+                )
+
+    return dp[m][n]
+
+# Example usage
+str1 = "Saturday"
+str2 = "Sunday"
+
+operations = min_edit_distance(str1, str2)
+print("Minimum edit distance:", operations)
+
+-----------------------------------------------------------------------------
+import nltk
+from nltk.util import ngrams
+from collections import Counter, defaultdict
+
+# Download if not already
+nltk.download('punkt')
+
+# Given corpus
+corpus = [
+    "<S> I am Henry </S>",
+    "<S> I like college </S>",
+    "<S> Do Henry like college </S>",
+    "<S> Henry I am </S>",
+    "<S> Do I like Henry </S>",
+    "<S> Do I like college </S>",
+    "<S> I do like Henry </S>"
 ]
-initial_positive_example = next(example for example in dataset if example["EnjoySport"] == "Yes")
-print(initial_positive_example)
-hypothesis = {key: value for key, value in initial_positive_example.items() if key != "EnjoySport"}
-print(hypothesis)
-for example in dataset:
-    if example["EnjoySport"] == "Yes":
-        for attribute, value in hypothesis.items():
-            print(example[attribute],"\t",value)
-            if example[attribute] != value:
-                hypothesis[attribute] = "?"
-print("Maximally Specific Hypothesis:", hypothesis)
 
------------------------------------------------------------------------------------
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn import datasets
-from sklearn.mixture import GaussianMixture
-iris=datasets.load_iris()
-X=iris.data[:,:2]
-d=pd.DataFrame(X,columns=['Feature1','Feature2'])
-plt.figure(figsize=(8,6))
-plt.scatter(d['Feature1'],d['Feature2'],color="gray",label="data points")
-gmm=GaussianMixture(n_components=3,random_state=42,max_iter=100)
-gmm.fit(d)
-labels=gmm.predict(d)
-d['labels']=labels
-# print(d)
-d0=d[d['labels']==0]
-print(d0)
-d1=d[d['labels']==1]
-d2=d[d['labels']==2]
-plt.scatter(d0['Feature1'],d0['Feature2'],color="red",label="Cluster 1")
-plt.scatter(d1['Feature1'],d1['Feature2'],color="yellow",label="Cluster 2")
-plt.scatter(d2['Feature1'],d2['Feature2'],color="green",label="Cluster 3")
-plt.xlabel('Feature 1')
-plt.ylabel('Feature 2')
-plt.show()
+# Tokenize and build 4-grams
+four_grams = []
+for sentence in corpus:
+    tokens = sentence.split()
+    four_grams += list(ngrams(tokens, 4))
 
----------------------------------------------------------------------------------------------------
-import pandas as pd
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-data = {
-    'Day': ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11', 'D12', 'D13', 'D14'],
-    'Outlook': ['Sunny', 'Sunny', 'Overcast', 'Rain', 'Rain', 'Rain', 'Overcast', 'Sunny', 'Sunny', 'Rain', 'Sunny', 'Overcast', 'Overcast', 'Rain'],
-    'Temperature': ['Hot', 'Hot', 'Hot', 'Mild', 'Cool', 'Cool', 'Cool', 'Mild', 'Cool', 'Mild', 'Mild', 'Mild', 'Hot', 'Mild'],
-    'Humidity': ['High', 'High', 'High', 'High', 'Normal', 'Normal', 'Normal', 'High', 'Normal', 'Normal', 'Normal', 'High', 'Normal', 'High'],
-    'Wind': ['Weak', 'Strong', 'Weak', 'Weak', 'Weak', 'Strong', 'Strong', 'Weak', 'Weak', 'Weak', 'Strong', 'Strong', 'Weak', 'Strong'],
-    'PlayTennis': ['No', 'No', 'Yes', 'Yes', 'Yes', 'No', 'Yes', 'No', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'No']
-}
-df = pd.DataFrame(data)
-df = df.drop(columns=['Day'])
-le = LabelEncoder()
-for column in df.columns:
-    df[column] = le.fit_transform(df[column])
+# Count 4-grams that start with ('Do', 'I', 'like')
+context = ('Do', 'I', 'like')
+next_word_freq = Counter()
 
-X = df.drop(columns=['PlayTennis'])
-y = df['PlayTennis']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-clf = DecisionTreeClassifier()
-clf.fit(X_train, y_train)
-y_pred = clf.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
+for gram in four_grams:
+    if gram[:3] == context:
+        next_word_freq[gram[3]] += 1
 
--------------------------------------------------------------------------------------------
-import numpy as np
-import matplotlib.pyplot as plt
-X = np.array([1, 5, 1.5, 8, 1, 9, 7, 8.7, 2.3, 5.5, 7.7, 6.1])
-Y = np.array([2, 8, 1.8, 8, 0.6, 11, 10, 9.4, 4, 3, 8.8, 7.5])
-labels = np.array([-1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1])
-data = list(zip(X, Y, labels))
-w = np.array([0.0, 0.0])
-b = 0.0
-learning_rate = 0.001
-iterations = 1000
-lambda_param = 0.01  # Regularization parameter
-for _ in range(iterations):
-    for x_i, y_i, label in data:
-        x = np.array([x_i, y_i])
-        if label * (np.dot(w, x) + b) < 1:
-            w += learning_rate * (label * x - 2 * lambda_param * w)
-            b += learning_rate * label
-        else:
-            w += learning_rate * (-2 * lambda_param * w)
-plt.scatter(X[labels == -1], Y[labels == -1], color='red', marker='o', label='Class -1')
-plt.scatter(X[labels == 1], Y[labels == 1], color='blue', marker='x', label='Class 1')
-slope = -w[0] / w[1]
-intercept = -b / w[1]
-x_values = np.linspace(min(X)-1, max(X)+1, 100)
-y_optimal = slope * x_values + intercept
-plt.plot(x_values, y_optimal, 'k-', label='Optimal Hyperplane')
-margin = 1 / np.sqrt(np.sum(w**2))
-y_margin_positive = slope * x_values + intercept + margin
-y_margin_negative = slope * x_values + intercept - margin
-plt.plot(x_values, y_margin_positive, 'g--', label='Positive Margin')
-plt.plot(x_values, y_margin_negative, 'g--', label='Negative Margin')
-plt.xlabel("X")
-plt.ylabel("Y")
-plt.legend()
-plt.title("SVM with Optimal and Marginal Hyperplanes")
-plt.show()
-------------------------------------------------------------------------------------
-import numpy as np
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from collections import Counter
-data = {
-    'Height': [158, 158, 160, 160, 163, 163, 160, 163, 165, 165, 168, 168, 168, 170, 170, 170],
-    'Weight': [58, 59, 59, 20, 60, 61, 64, 54, 61, 62, 62, 63, 66, 63, 64, 58],
-    'TShirtSize': ['M', 'M', 'M', 'M', 'M', 'M', 'L', 'M', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L']}
-df = pd.DataFrame(data)
-tshirt_size_mapping = {'M': 0, 'L': 1}
-df['TShirtSize'] = df['TShirtSize'].map(tshirt_size_mapping)
-X = df[['Height', 'Weight']].values  # Features: Height and Weight
-y = df['TShirtSize'].values  # Target: T-shirt Size (encoded)
-train_size = int(len(X) * 0.8)
-X_train, X_test = X[:train_size], X[train_size:]
-y_train, y_test = y[:train_size], y[train_size:]
-def euclidean_distance(x1, x2):
-    return np.sqrt(np.sum((x1 - x2) ** 2))
-def knn_predict(X_train, y_train, X_test, k=3):
-    predictions = []
-    for test_point in X_test:
-        distances = []
-        for idx, train_point in enumerate(X_train):
-            distance = euclidean_distance(test_point, train_point)
-            distances.append((distance, y_train[idx]))
-        distances.sort(key=lambda x: x[0])
-        k_nearest_neighbors = distances[:k]
-        labels = [neighbor[1] for neighbor in k_nearest_neighbors]
-        majority_label = Counter(labels).most_common(1)[0][0]
-        predictions.append(majority_label)   
-    return np.array(predictions)
-new_customer = np.array([[167, 61]])  # New customer data
-predicted_size = knn_predict(X_train, y_train, new_customer, k=3)
-reverse_mapping = {0: 'M', 1: 'L'}
-predicted_size_label = reverse_mapping[predicted_size[0]]
-print("Predicted T-shirt size:", predicted_size_label)
-y_pred = knn_predict(X_test, y_test, X_test, k=3)
-accuracy = np.sum(y_pred == y_test) / len(y_test)
-print("Model Accuracy:", accuracy)
+# Display result
+if next_word_freq:
+    print("Most probable next word:", next_word_freq.most_common(1)[0][0])
+    print("All options:", dict(next_word_freq))
+else:
+    print("No match found for context:", context)
+
+-----------------------------------------------------------------------------
+import nltk
+from nltk.stem import (
+    PorterStemmer,
+    LancasterStemmer,
+    SnowballStemmer,
+    RegexpStemmer,
+    WordNetLemmatizer
+)
+from textblob import Word as TextBlobWord
+
+# Download required data
+# nltk.download('punkt')
+# nltk.download('wordnet')
+# nltk.download('omw-1.4')
+
+# Input words
+words = ['Programming', 'Loving', 'Lovely', 'Kind']
+
+# Initialize stemmers
+porter = PorterStemmer()
+lancaster = LancasterStemmer()
+snowball = SnowballStemmer("english")
+regexp = RegexpStemmer('ing$|ly$', min=4)
+
+# Lemmatizer
+wordnet_lemmatizer = WordNetLemmatizer()
+
+print(f"{'Word':<15} {'Porter':<12} {'Lancaster':<12} {'Snowball':<12} {'Regexp':<12} {'WordNet Lemma':<16} {'TextBlob Lemma'}")
+print("-" * 100)
+
+for word in words:
+    w = word.lower()
+    textblob_word = TextBlobWord(w)
+    print(f"{word:<15} "
+          f"{porter.stem(w):<12} "
+          f"{lancaster.stem(w):<12} "
+          f"{snowball.stem(w):<12} "
+          f"{regexp.stem(w):<12} "
+          f"{wordnet_lemmatizer.lemmatize(w, pos='v'):<16} "
+          f"{textblob_word.lemmatize()}")
+
+
+-----------------------------------------------------------------------------
+import nltk
+
+sentences = [
+    "I need a flight from Atlanta.",
+    "Everything to permit us.",
+    "I would like to address the public on this issue.",
+    "We need your shipping address."
+]
+
+for sentence in sentences:
+    tokens = sentence.split()
+    tagged = nltk.pos_tag(tokens)
+    print(f"\nSentence: {sentence}")
+    print("Tagged:", tagged)
+
+-----------------------------------------------------------------------------
+paragraph = """
+Artificial Intelligence (AI) has rapidly evolved over the past decade, becoming a significant force across industries.
+From healthcare to finance, AI systems are revolutionizing how tasks are performed.
+In medicine, AI assists in early detection of diseases and personalized treatments.
+In the automotive sector, self-driving technology powered by AI has made tremendous strides.
+AI chatbots now handle customer service queries 24/7 with impressive accuracy.
+However, with great power comes great responsibility.
+There are concerns about privacy, ethics, and job displacement caused by AI systems.
+Regulation is essential to ensure AI is used fairly and transparently.
+Education systems are adapting to teach AI concepts at an early age.
+Looking ahead, AI is expected to become more human-like, capable of understanding emotions and context.
+But it’s crucial that its development remains aligned with human values and benefit to society.
+"""
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
+from collections import defaultdict
+import heapq
+
+# # Download required resources
+# nltk.download('punkt')
+# nltk.download('stopwords')
+
+# Tokenize into sentences
+sentences = sent_tokenize(paragraph)
+words = word_tokenize(paragraph.lower())
+
+# Filter stopwords and punctuation
+stop_words = set(stopwords.words('english'))
+filtered_words = [word for word in words if word.isalnum() and word not in stop_words]
+
+# Frequency table
+word_freq = defaultdict(int)
+for word in filtered_words:
+    word_freq[word] += 1
+
+# Sentence scores
+sent_scores = defaultdict(int)
+for sent in sentences:
+    for word in word_tokenize(sent.lower()):
+        if word in word_freq:
+            sent_scores[sent] += word_freq[word]
+
+# Extract top 3 scored sentences
+summary_sentences = heapq.nlargest(3, sent_scores, key=sent_scores.get)
+summary = " ".join(summary_sentences)
+
+print("🔹 Extraction-based Summary:\n", summary)
+
+-----------------------------------------------------------------------------
+import re
+
+text = """
+You can reach us at contact@company.com or sales@example.org.
+Alternatively, email john.doe99@gmail.com for support.
+Call us on 9876543210 or +91-9123456789 anytime.
+"""
+
+names = ['Sunil', 'Shyam', 'Ankit', 'Surjeet', 'Sumit', 'Subhi', 'Surbhi', 'Siddharth', 'Sujan']
+
+# Simplified email regex (still matches valid emails)
+emails = re.findall(r'[\w.-]+@[\w.-]+\.\w+', text)
+print("Emails:", emails)
+
+# Simplified phone regex (10 digits with optional +91 or +91-)
+phones = re.findall(r'(?:\+91[-\s]?)?\d{10}', text)
+print("Phone Numbers:", phones)
+
+# Names starting with 'Su' and 5 letters total (Su___)
+pattern_names = [name for name in names if re.fullmatch(r'Su\w{3}', name)]
+print("Matching Names (Su___):", pattern_names)
+
+sample_text = "abc132 abc abc123"
+
+# Find first sequence of digits
+search_result = re.search(r'\d+', sample_text)
+print("Search (first digits):", search_result.group())
+
+# Match 'abc' at beginning
+match_result = re.match(r'abc', sample_text)
+print("Match at start:", match_result.group())
+
+# Replace all 'abc' with 'XYZ'
+sub_result = re.sub(r'abc', 'XYZ', sample_text)
+print("Substitution:", sub_result)
+
+# Precompiled pattern
+pattern = re.compile(r'abc')
+compiled_result = pattern.findall(sample_text)
+print("Compiled pattern findall:", compiled_result)
+
+sample = "ab abccc abbbbb abccccc"
+# 'ab' followed by 0 or more 'c'
+matches = re.findall(r'abc*', sample)
+print("Pattern 'ab' followed by 0+ 'c':", matches)
+
+sample = "a abc abcbc abcbcbc ab bcbc"
+# 'a' followed by 0 or more 'bc'
+matches = re.findall(r'a(?:bc)*', sample)
+print("Pattern 'a' followed by 0+ 'bc':", matches)
+
+sample = "ab abc abbc abb abcd"
+# 'ab' followed by optional 'c'
+matches = re.findall(r'ab(c?)', sample)
+print("Pattern 'ab' followed by 0 or 1 'c':", matches)
+
+
+-----------------------------------------------------------------------------
